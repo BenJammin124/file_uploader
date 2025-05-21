@@ -2,11 +2,8 @@
 const CustomNotFoundError = require("../errors/CustomNotFoundError");
 const asyncHandler = require("express-async-handler");
 const { body, validationResult } = require("express-validator");
-const bcrypt = require("bcryptjs");
-const passport = require("passport");
 const { userDataValidate } = require("../validations/userValidation");
 const query = require("../services/queries");
-const expressAsyncHandler = require("express-async-handler");
 
 exports.createAccount = asyncHandler(async (req, res, next) => {
   res.render("create-account", {

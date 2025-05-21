@@ -7,12 +7,14 @@
   </head>
   <body>
     <%- include('./partials/errors') %>
-    <form action="/login" method="POST">
-      <label>Email:</label>
-      <input name="email" type="text" required />
-      <label>Password:</label>
-      <input name="password" type="password" required />
-      <button type="submit">Login</button>
-    </form>
+    <main class="main">
+      <form action="/login" method="POST">
+        <label>Email:</label>
+        <input name="email" type="text" required />
+        <label>Password:</label>
+        <input name="password" type="password" required />
+        <button type="submit">Login</button>
+      </form>
+    </main>
   </body>
 </html>
