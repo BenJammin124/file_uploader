@@ -1,0 +1,36 @@
+<nav class="navbar">
+  <div class="navbar-left">
+    <a href="/" class="logo">Project</a>
+  </div>
+  <div class="navbar-right">
+    <% if (user) { %>
+    <div class="dropdown">
+      <div>
+        <button
+          class="dropbtn"
+          style="display: flex; align-items: center; gap: 0.5rem"
+        >
+          <%= user.email %><img
+            width="15"
+            height="15"
+            src="https://img.icons8.com/ios-filled/50/FFFFFF/down-squared--v2.png"
+            alt="down-squared--v2"
+          />
+        </button>
+      </div>
+
+      <div class="dropdown-content">
+        <a href="/">Home</a>
+        <form action="/logout" method="POST" style="display: inline">
+          <button type="submit" style="all: unset; cursor: pointer">
+            Logout
+          </button>
+        </form>
+      </div>
+    </div>
+    <% } else { %>
+    <a href="/login">Sign In</a>
+    <a href="/create-account">Create Account</a>
+    <% } %>
+  </div>
+</nav>

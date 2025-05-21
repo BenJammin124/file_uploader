@@ -1,0 +1,10 @@
+<!-- views/partials/errors.ejs -->
+<% if (messages.error && messages.error.length > 0) { %>
+<ul class="error-list">
+  <% messages.error.forEach(err => { %>
+  <li class="error-msg"><%= err %></li>
+  <% }) %>
+</ul>
+<% } %> <% if (messages.success) { %>
+<p class="success-msg"><%= messages.success %></p>
+<% } %>

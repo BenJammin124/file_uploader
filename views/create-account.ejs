@@ -1,0 +1,149 @@
+<!-- views/create-account.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= title %></title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="form-container">
+      <form
+        action="/create-account"
+        method="POST"
+        class="create-form"
+        novalidate
+      >
+        <h2>Create Account</h2>
+        <%- include('./partials/errors') %>
+
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            required
+            autocomplete="off"
+          />
+          <span class="error"></span>
+        </div>
+
+        <div class="form-group">
+          <div class="label-flex">
+            <label for="password">Password</label>
+            <div>
+              <input
+                type="checkbox"
+                name="showPassword"
+                id="showPassword"
+                autocomplete="new-password"
+              />
+              <label for="showPassword">Show/hide password</label>
+            </div>
+          </div>
+          <input type="password" id="password" name="password" required />
+          <span class="error"></span>
+        </div>
+
+        <!-- <div id="password-message">
+          <h3>Password must contain:</h3>
+          <div class="password-message-flex">
+            <div class="password-message-left">
+              <p class="password-message-item invalid">
+                At least
+                <b>one lowercase letter</b>
+              </p>
+              <p class="password-message-item invalid">
+                At least
+                <b>one uppercase letter</b>
+              </p>
+            </div>
+            <div class="password-message-right">
+              <p class="password-message-item invalid">
+                At least
+                <b>one number</b>
+              </p>
+              <p class="password-message-item invalid">
+                Minimum
+                <b>5 characters</b>
+              </p>
+            </div>
+          </div>
+        </div> -->
+
+        <div class="form-group">
+          <div class="label-flex">
+            <label for="confirmPassword">Confirm Password</label>
+            <div>
+              <input
+                type="checkbox"
+                name="showConfirmPassword"
+                id="showConfirmPassword"
+              />
+              <label for="showConfirmPassword">Show/hide password</label>
+            </div>
+          </div>
+          <input type="password" id="confirmPassword" name="confirmPassword" />
+          <span class="error"></span>
+        </div>
+
+        <div class="form-group">
+          <button type="submit" class="confirmBtn">Create Account</button>
+        </div>
+      </form>
+
+      <div class="center centerVertical">
+        <p>Already have an account?</p>
+        <a href="/login"> Sign in</a>
+      </div>
+    </div>
+
+    <script>
+      const showHide = document.querySelector("#showPassword");
+      const showHideConfirm = document.querySelector("#showConfirmPassword");
+      const password = document.querySelector("#password");
+      const confirmPassword = document.querySelector("#confirmPassword");
+      const confirmPasswordError = document.querySelector(
+        "#confirmPassword + span.error"
+      );
+
+      showHide.addEventListener("click", (e) => {
+        if (e.srcElement.checked) {
+          password.type = "text";
+        } else {
+          password.type = "password";
+        }
+      });
+
+      showHideConfirm.addEventListener("click", (e) => {
+        if (e.srcElement.checked) {
+          confirmPassword.type = "text";
+        } else {
+          confirmPassword.type = "password";
+        }
+      });
+
+      confirmPassword.addEventListener("input", checkPasswordMatch);
+      confirmPassword.addEventListener("blur", checkPasswordMatch);
+
+      password.addEventListener("input", checkPasswordMatch);
+
+      function checkPasswordMatch() {
+        if (confirmPassword.value === "") {
+          confirmPasswordError.textContent = "";
+          confirmPasswordError.classList.remove("active");
+        } else if (password.value === confirmPassword.value) {
+          confirmPasswordError.textContent = "Passwords match!";
+          confirmPasswordError.classList.add("password-match");
+          confirmPasswordError.classList.add("active");
+        } else {
+          confirmPasswordError.textContent = "Passwords do not match!";
+          confirmPasswordError.classList.add("active");
+          confirmPasswordError.classList.remove("password-match");
+        }
+      }
+    </script>
+  </body>
+</html>
