@@ -4,17 +4,72 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title><%= title %></title>
+    <link rel="stylesheet" href="/styles.css" />
+    <link rel="stylesheet" href="/login-create.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
   </head>
-  <body>
-    <%- include('./partials/errors') %>
-    <main class="main">
-      <form action="/login" method="POST">
-        <label>Email:</label>
-        <input name="email" type="text" required />
-        <label>Password:</label>
-        <input name="password" type="password" required />
-        <button type="submit">Login</button>
-      </form>
+  <body class="auth-page">
+    <%- include('./partials/navbar') %>
+
+    <main class="landing-main flex-this">
+      <div class="landing-main-left">
+        <section class="hero-section">
+          <div class="hero-content">
+            <h1 class="hero-title">Welcome to FileHub</h1>
+            <p class="hero-subtext">
+              Effortlessly store, manage, and access your files from
+              anywhere.<br />
+              Secure. Reliable. Designed for simplicity.
+            </p>
+            <a href="/create-account" class="cta-button">Create Account</a>
+            <a href="#login-form" class="cta-button hidden">Login</a>
+          </div>
+        </section>
+
+        <section class="feature-timeline">
+          <div class="feature-step">
+            <h3><span>🔒</span> Secure</h3>
+            <p>Robust encryption keeps your files safe and private.</p>
+          </div>
+          <div class="feature-step">
+            <h3><span>🌍</span> Ready Access</h3>
+            <p>Upload and access your files from any device, anytime.</p>
+          </div>
+          <div class="feature-step">
+            <h3><span>✨</span> Easy-to-Use</h3>
+            <p>Simple, intuitive design to keep you focused and organized.</p>
+          </div>
+        </section>
+        <img class="landing-img" src="/icons/2933152.jpg" alt="" />
+      </div>
+
+      <section class="login-section" id="login-form">
+        <div class="auth-card">
+          <h2>Login</h2>
+          <%- include('./partials/errors') %>
+          <form action="/login" method="POST" class="auth-form">
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input name="email" id="email" type="email" required />
+            </div>
+
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input name="password" id="password" type="password" required />
+            </div>
+
+            <button type="submit" class="confirmBtn">Login</button>
+          </form>
+          <div class="center centerVertical">
+            <p>Don’t have an account?</p>
+            <a href="/create-account">Create one</a>
+          </div>
+        </div>
+      </section>
     </main>
+    <script src="/jsscripts/dropdownfunction.js"></script>
   </body>
 </html>

@@ -28,13 +28,13 @@ app.use(express.urlencoded({ extended: false }));
 app.use(
   session({
     store: new PrismaSessionStore(prisma, {
-      checkPeriod: 2 * 60 * 1000, //ms
+      checkPeriod: 2 * 60 * 1000,
       dbRecordIdIsSessionId: true,
       dbRecordIdFunction: undefined,
     }),
     secret: process.env.SECRET,
-    resave: false, // Don't resave the session if it hasn't been modified
-    saveUninitialized: true, // Save session even if it is uninitialized
+    resave: false,
+    saveUninitialized: true,
     cookie: {
       maxAge: 1000 * 60 * 60 * 24,
     },
@@ -48,8 +48,10 @@ app.use(passport.session());
 
 app.use(flash());
 
-app.use("/", indexRouter);
+app.get("/favicon.ico", (req, res) => res.status(204));
+
 app.use("/", authRouter);
+app.use("/", indexRouter);
 
 app.use((err, req, res, next) => {
   console.error(err);

@@ -1,15 +1,12 @@
 <nav class="navbar">
   <div class="navbar-left">
-    <a href="/" class="logo">Project</a>
+    <a href="/login" class="logo">FileHub</a>
   </div>
   <div class="navbar-right">
     <% if (user) { %>
     <div class="dropdown">
       <div>
-        <button
-          class="dropbtn"
-          style="display: flex; align-items: center; gap: 0.5rem"
-        >
+        <button class="dropbtn">
           <%= user.email %><img
             width="15"
             height="15"
@@ -20,17 +17,16 @@
       </div>
 
       <div class="dropdown-content">
-        <a href="/">Home</a>
-        <form action="/logout" method="POST" style="display: inline">
-          <button type="submit" style="all: unset; cursor: pointer">
-            Logout
-          </button>
+        <a href="/" class="dropdown-item">My Files</a>
+        <a href="/login" class="dropdown-item">Home</a>
+        <form action="/logout" method="POST" class="dropdown-form">
+          <button type="submit" class="dropdown-item">Logout</button>
         </form>
       </div>
     </div>
     <% } else { %>
-    <a href="/login">Sign In</a>
-    <a href="/create-account">Create Account</a>
+    <a class="navbar-item" href="/login">Sign In</a>
+    <a class="navbar-item" href="/create-account">Create Account</a>
     <% } %>
   </div>
 </nav>

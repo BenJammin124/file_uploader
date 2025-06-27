@@ -4,9 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title><%= title %></title>
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="/styles.css" />
     <link
-      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@500;600&display=swap"
       rel="stylesheet"
     />
     <link
@@ -16,36 +16,93 @@
   </head>
   <body>
     <%- include('./partials/navbar') %>
-    <main class="main">
-      <% if(locals.user) { %> <% if(user.member) { %>
-      <div class="membership-banner">
-        <p>Thanks for joining — enjoy your new access!</p>
-      </div>
-      <% } else {%>
-
-      <div class="membership-banner">
-        <p>
-          Want to see who posted and when? <a href="/members">Join now</a> and
-          unlock full access!
-        </p>
-      </div>
-      <% } %>
-
-      <div class="center">
-        <a href="/create-new-message" class="create-message-link"
-          >Create new message</a
-        >
-      </div>
-      <%} else {%>
-      <div class="membership-banner">
-        <p>
-          Create an account to make your own posts!
-          <a href="/create-account">Click here!</a>
-        </p>
-        <p>Or <a href="/login">Sign in</a></p>
-      </div>
-      <%}%>
-    </main>
+    <div class="layout">
+      <%- include('./partials/sidebar') %>
+      <main class="main">
+        <%- include('./partials/newfileform') %> <%-
+        include('./partials/errors') %>
+        <div class="folder-title">
+          <img src="/icons/file-cabinet.svg" class="icon" alt="" />
+          <h1 class="main-folder-heading">
+            <a href="/">My Files</a>
+          </h1>
+          <% if (title !== 'My Files') { %>
+          <div><img src="/icons/chevron-right.svg" alt="" class="icon" /></div>
+          <h2 class="sub-folder-heading"><%= title %></h2>
+          <% } %>
+        </div>
+        <% if(locals.user) { %>
+        <div class="table-headers">
+          <div class="file-name">File name</div>
+          <div class="file-size">Size</div>
+          <div class="upload-date">Upload Date</div>
+          <div class="file-crud"></div>
+        </div>
+        <% if(files.length > 0) { %> <% files.forEach(file => { %>
+        <div class="file-container">
+          <div class="file-name"><%= file.title %></div>
+          <div class="file-size"><%= file.size %></div>
+          <div class="upload-date"><%= file.createdAt %></div>
+          <div class="file-crud">
+            <div class="download-file">
+              <img
+                class="icon download-icon"
+                src="/icons/download.svg"
+                alt="downloadIcon"
+                data-file-id="<%= file.id %>"
+                onclick="return confirmDownload('<%= file.id %>', '<%= file.title %>')"
+                title="Download File"
+              />
+            </div>
+            <div class="rename-file">
+              <img
+                class="icon edit-file-icon rename-icon"
+                src="/icons/rename.svg"
+                alt="rename"
+                title="Change file name and folder"
+                data-file-id="<%= file.id %>"
+                data-file-name="<%= file.title %>"
+                data-folder-id="<%= file.folderId %>"
+              />
+            </div>
+            <div class="delete-file">
+              <form action="/delete-file/<%= file.id %>" method="POST">
+                <button type="submit" class="icon-button" title="Delete file">
+                  <img
+                    src="/icons/delete.svg"
+                    alt="delete-icon"
+                    class="icon folder-delete-icon"
+                  />
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+        <% }) %> <%} else {%>
+        <div>
+          <p>This folder is empty. Upload files to get started.</p>
+        </div>
+        <%}%> <%} else {%>
+        <div class="membership-banner">
+          <p>
+            Create an account to make your own posts!
+            <a href="/create-account">Click here!</a>
+          </p>
+          <p>Or <a href="/login">Sign in</a></p>
+        </div>
+        <%}%>
+      </main>
+    </div>
     <script src="/jsscripts/dropdownfunction.js"></script>
+    <script src="/jsscripts/modal.js"></script>
+    <script>
+      function confirmDownload(id, fileName) {
+        if (confirm(`Are you sure you want to download ${fileName}?`)) {
+          window.location.href = `/file/download/${id}`;
+        } else {
+          return false;
+        }
+      }
+    </script>
   </body>
 </html>

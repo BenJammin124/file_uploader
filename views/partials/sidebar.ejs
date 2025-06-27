@@ -1,0 +1,50 @@
+<nav class="side-bar">
+  <h3 class="sidebar-heading">Create</h3>
+  <div class="button-group">
+    <button class="new-button" id="file-open-modal" type="button">
+      New File
+      <img class="icon white" src="/icons/upload.svg" alt="uploadsvg" />
+    </button>
+  </div>
+  <div class="button-group">
+    <button class="new-button" id="folder-open-modal" type="button">
+      New Folder
+      <img class="icon white" src="/icons/folder-plus.svg" alt="folder" />
+    </button>
+  </div>
+  <h3 class="sidebar-heading">Folders</h3>
+  <div>
+    <ul class="folders-list">
+      <% if (folders) { %> <% folders.forEach(folder => { %>
+      <li class="folder-row">
+        <span class="folder-name">
+          <a href="/folder/<%= folder.id %>"><%= folder.name %></a>
+        </span>
+        <div class="flex-icons">
+          <img
+            src="/icons/rename.svg"
+            alt="change-name-icon"
+            class="icon rename-icon"
+            title="Change folder name"
+            data-folder-id="<%= folder.id %>"
+            data-folder-name="<%= folder.name %>"
+          />
+          <form
+            action="/delete-folder/<%= folder.id %>"
+            method="POST"
+            style="display: inline"
+          >
+            <button type="submit" class="icon-button" title="Delete folder">
+              <img
+                src="/icons/delete.svg"
+                alt="delete-folder-icon"
+                class="icon folder-delete-icon"
+              />
+            </button>
+          </form>
+        </div>
+      </li>
+      <% }) %> <% } %>
+    </ul>
+  </div>
+</nav>

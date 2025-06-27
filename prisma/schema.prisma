@@ -24,10 +24,11 @@ model User {
 }
 
 model UserStorage {
-  id     Int          @id @default(autoincrement())
-  user   User         @relation(fields: [userId], references: [id])
-  userId Int          @unique
-  files  StoredFile[]
+  id      Int          @id @default(autoincrement())
+  user    User         @relation(fields: [userId], references: [id])
+  userId  Int          @unique
+  files   StoredFile[]
+  folders Folder[]
 }
 
 model StoredFile {
@@ -36,8 +37,19 @@ model StoredFile {
   url       String
   createdAt DateTime    @default(now())
   fileType  String?
+  size      Float
   storage   UserStorage @relation(fields: [storageId], references: [id])
   storageId Int
+  folder    Folder?     @relation(fields: [folderId], references: [id])
+  folderId  Int?
+}
+
+model Folder {
+  id        Int          @id @default(autoincrement())
+  name      String
+  storage   UserStorage  @relation(fields: [storageId], references: [id])
+  storageId Int
+  files     StoredFile[]
 }
 
 model Session {
