@@ -45,14 +45,15 @@
           <div class="upload-date"><%= file.createdAt %></div>
           <div class="file-crud">
             <div class="download-file">
-              <img
-                class="icon download-icon"
-                src="/icons/download.svg"
-                alt="downloadIcon"
-                data-file-id="<%= file.id %>"
-                onclick="return confirmDownload('<%= file.id %>', '<%= file.title %>')"
-                title="Download File"
-              />
+              <a href="<%= file.url %>">
+                <img
+                  class="icon download-icon"
+                  src="/icons/download.svg"
+                  alt="downloadIcon"
+                  data-file-id="<%= file.id %>"
+                  title="Download File"
+                />
+              </a>
             </div>
             <div class="rename-file">
               <img

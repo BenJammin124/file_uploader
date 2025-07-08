@@ -14,15 +14,11 @@ exports.createUser = async ({ email, password }) => {
 };
 
 exports.checkForUser = async (email) => {
-  console.log(email);
-
   const user = await prisma.user.findUnique({
     where: {
       email: email,
     },
   });
-
-  console.log(user);
   return user;
 };
 
@@ -43,7 +39,6 @@ exports.createUserStorage = async (id) => {
       },
     },
   });
-  console.log(userStorage);
   return userStorage;
 };
 
@@ -57,7 +52,7 @@ exports.createNewFile = async (
 ) => {
   const data = {
     title: title,
-    url: `/uploads/${filename}`,
+    url: `${filename}`,
     fileType: fileType,
     size: size,
     storage: { connect: { id } },
@@ -97,7 +92,6 @@ exports.getUserFilesAndFolders = async (userId) => {
       },
     },
   });
-  console.log(userStorage);
   return userStorage;
 };
 

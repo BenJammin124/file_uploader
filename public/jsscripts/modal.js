@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const folderForm = document.querySelector("#folder-form");
   const folderName = document.querySelector("#folder");
   const submitButton = document.querySelector("#modal-submit-button");
-  const folderRenameIcon = document.querySelectorAll(".folder-rename-icon");
+  const folderRenameIcon = document.querySelectorAll(".rename-icon");
   const editFileIcon = document.querySelectorAll(".edit-file-icon");
 
   const fileForm = document.querySelector("#file-form");
@@ -18,17 +18,14 @@ document.addEventListener("DOMContentLoaded", () => {
   openFileModal.addEventListener("click", () => {
     fileForm.action = "/upload";
 
-    fileLabel.textContent = "File";
+    fileLabel.textContent = "File (max: 5MB)";
 
     fileInput.type = "file";
     fileInput.name = "file";
-
-    console.log("Opening file modal");
     fileModal.showModal();
   });
 
   openFolderModal.addEventListener("click", () => {
-    console.log("Opening folder modal");
     folderForm.action = "/create-folder";
     folderName.value = "";
     submitButton.textContent = "Create Folder";
@@ -43,14 +40,12 @@ document.addEventListener("DOMContentLoaded", () => {
       folderName.value = oldFolderName;
       submitButton.textContent = "Confirm";
       folderModal.showModal();
-      console.log("rename clicked");
     });
   });
 
   editFileIcon.forEach((icon) => {
     icon.addEventListener("click", () => {
       const fileId = icon.dataset.fileId;
-      console.log("click");
       const olderFileName = icon.dataset.fileName;
       folderSelect.value = icon.dataset.folderId || "00";
 

@@ -6,6 +6,7 @@ const { userDataValidate } = require("../validations/userValidation");
 const query = require("../services/queries");
 const { prisma } = require("../config/client");
 const path = require("node:path");
+const supabase = require("../config/supabase");
 
 exports.createAccount = asyncHandler(async (req, res, next) => {
   res.render("create-account", {
@@ -92,27 +93,80 @@ exports.homePage = asyncHandler(async (req, res, next) => {
 });
 
 // file upload
+// exports.uploadFile = asyncHandler(async (req, res, next) => {
+//   if (!req.file) {
+//     req.flash("error", "No file uploaded.");
+//     return res.redirect("/");
+//   }
+
+//   const { originalname, mimetype, filename, size } = req.file;
+//   let folder = req.body.folderId;
+//   const userId = req.user.id;
+
+//   let userStorage = await query.checkForUserStorageById(userId);
+
+//   if (!userStorage) {
+//     userStorage = await query.createUserStorage(userId);
+//   }
+
+//   console.log(userStorage);
+
+//   await query.createNewFile(
+//     originalname,
+//     filename,
+//     mimetype,
+//     size,
+//     userStorage.id,
+//     folder
+//   );
+
+//   req.flash("success", "File uploaded successfully.");
+//   res.redirect("/");
+// });
+
 exports.uploadFile = asyncHandler(async (req, res, next) => {
   if (!req.file) {
     req.flash("error", "No file uploaded.");
     return res.redirect("/");
   }
 
-  const { originalname, mimetype, filename, size } = req.file;
-  let folder = req.body.folderId;
+  const MAX_FILE_SIZE = 5 * 1024 * 1024;
+
+  const { originalname, mimetype, buffer, size } = req.file;
+  const folder = req.body.folderId;
   const userId = req.user.id;
 
-  let userStorage = await query.checkForUserStorageById(userId);
+  if (size > MAX_FILE_SIZE) {
+    req.flash("error", "File exceeds upload limit (max: 5 MB.)");
+    return res.redirect("/");
+  }
 
+  let userStorage = await query.checkForUserStorageById(userId);
   if (!userStorage) {
     userStorage = await query.createUserStorage(userId);
   }
 
-  console.log(userStorage);
+  const filePath = `${userId}/${Date.now()}-${originalname}`;
+
+  const { error } = await supabase.storage
+    .from("user-file-storage")
+    .upload(filePath, buffer, {
+      contentType: mimetype,
+    });
+
+  if (error) {
+    console.error("Upload failed:", error);
+    req.flash("error", "Failed to upload file.");
+    return res.redirect("/");
+  }
+
+  const {
+    data: { publicUrl },
+  } = supabase.storage.from("user-file-storage").getPublicUrl(filePath);
 
   await query.createNewFile(
     originalname,
-    filename,
+    publicUrl,
     mimetype,
     size,
     userStorage.id,
@@ -144,7 +198,6 @@ exports.addNewFolder = asyncHandler(async (req, res, next) => {
 
 exports.displaySelectedFolderFiles = asyncHandler(async (req, res, next) => {
   const selectedFolderId = req.params.id;
-  console.log("selectedFolderId", req.params);
   let folderFiles = await query.getUserFilesWithinFolder(selectedFolderId);
   const userId = req.user.id;
   const userStorage = await query.getUserFilesAndFolders(userId);
@@ -159,8 +212,6 @@ exports.displaySelectedFolderFiles = asyncHandler(async (req, res, next) => {
     size: formatFileSize(file.size),
     createdAt: formatDate(file.createdAt),
   }));
-
-  console.log("folderFiles.files", folderFiles);
 
   return res.render("home", {
     title: folderFiles.name,
@@ -186,7 +237,6 @@ exports.renameFolder = asyncHandler(async (req, res, next) => {
     newFolderName
   );
 
-  console.log(updatedFolderName);
   return res.redirect("/");
 });
 
@@ -217,8 +267,19 @@ exports.fileDelete = asyncHandler(async (req, res, next) => {
     return res.redirect("/");
   }
 
+  const supabasePath = file.url.split("/user-file-storage/")[1];
+
+  const { error } = await supabase.storage
+    .from("user-file-storage")
+    .remove([supabasePath]);
+
+  if (error) {
+    console.error("Supabase delete error:", error);
+    req.flash("error", "Could not delete file from storage.");
+    return res.redirect("/");
+  }
+
   const deletedFile = await query.deleteFile(fileId);
-  console.log("deleted File", deletedFile);
 
   return res.redirect("/");
 });
@@ -242,7 +303,6 @@ exports.fileEditNameAndFolder = asyncHandler(async (req, res, next) => {
   }
 
   const editedFile = await query.editFile(fileId, fileName, folderId);
-  console.log("edited file", editedFile);
   return res.redirect("/");
 });
 
