@@ -92,7 +92,7 @@ exports.getUserFilesAndFolders = async (userId) => {
       },
     },
   });
-  return userStorage;
+  return userStorage || { files: [], folders: [] };
 };
 
 exports.createNewFolder = async (name, id) => {

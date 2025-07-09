@@ -74,11 +74,11 @@ function formatDate(date) {
 }
 
 exports.homePage = asyncHandler(async (req, res, next) => {
-  let userStorage = {};
-  let files = {};
+  let userStorage = { files: [], folders: [] };
+  let files = [];
   if (req.user) {
     userStorage = await query.getUserFilesAndFolders(req.user.id);
-    files = userStorage.files;
+    files = userStorage.files || [];
     files = files.map((file) => ({
       ...file,
       size: formatFileSize(file.size),
@@ -90,7 +90,7 @@ exports.homePage = asyncHandler(async (req, res, next) => {
     user: req.user,
     messages: req.flash(),
     files: files,
-    folders: userStorage.folders,
+    folders: userStorage.folders || [],
     selectedFolderId: false,
   });
 });
