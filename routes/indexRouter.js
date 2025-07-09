@@ -9,7 +9,7 @@ indexRouter.post("/create-account", indexController.createAccountPost);
 
 const checkAuthentication = (req, res, next) => {
   if (req.isAuthenticated()) {
-    next();
+    return next();
   }
 
   if (req.originalUrl === "/") {

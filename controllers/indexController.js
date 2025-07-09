@@ -44,7 +44,10 @@ exports.createAccountPost = [
     const { email, password } = req.body;
     const user = await query.createUser({ email, password });
     console.log(user);
-    req.flash("success", "success!");
+    req.flash(
+      "success",
+      "Account successfully created. Please log in to continue."
+    );
     res.redirect("login");
   }),
 ];
