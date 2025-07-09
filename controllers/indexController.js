@@ -92,7 +92,7 @@ exports.homePage = asyncHandler(async (req, res, next) => {
   });
 });
 
-// file upload
+// file upload(original before supabase storage)
 // exports.uploadFile = asyncHandler(async (req, res, next) => {
 //   if (!req.file) {
 //     req.flash("error", "No file uploaded.");
@@ -245,6 +245,8 @@ exports.deleteFolder = asyncHandler(async (req, res, next) => {
 
   const deletedFolder = await query.deleteFolder(selectedFolderId);
   console.log(deletedFolder);
+
+  req.flash("success", "Folder successfully deleted.");
   return res.redirect("/");
 });
 

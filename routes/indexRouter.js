@@ -10,10 +10,14 @@ indexRouter.post("/create-account", indexController.createAccountPost);
 const checkAuthentication = (req, res, next) => {
   if (req.isAuthenticated()) {
     next();
-  } else {
-    req.flash("error", "You must login first to upload a file.");
-    res.redirect("/login");
   }
+
+  if (req.originalUrl === "/") {
+    return res.redirect("/");
+  }
+
+  req.flash("error", "You must login first to upload a file.");
+  res.redirect("/login");
 };
 
 indexRouter.post(
