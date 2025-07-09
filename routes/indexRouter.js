@@ -13,7 +13,7 @@ const checkAuthentication = (req, res, next) => {
   }
 
   if (req.originalUrl === "/") {
-    return res.redirect("/");
+    return res.redirect("/login");
   }
 
   req.flash("error", "You must login first to upload a file.");
